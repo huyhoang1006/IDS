@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+
+data = pd.read_csv('/content/drive/My Drive/Cũ/data_all.csv')
+
+columns_name =[]
+mean_value = dict()
+calu_value = dict()
+
+for name in data.columns:
+  columns_name.append(name)
+
+columns_name.remove('Label')
+
+for name in columns_name:
+  data[name] = data[name].astype(float)
+  mean_value[name] = np.mean(data[name])
+  calu_value[name] = np.max(data[name]) - np.min(data[name])
+
+
+for i in range(len(data)):
+    for name in columns_name:
+      temp_value = (data[name][i] - mean_value[name]) / calu_value[name]
+      data.at[[i], name] = temp_value
+
+data.to_csv('/content/drive/My Drive/Cũ/data')
+
+# download data at https://drive.google.com/open?id=1EP21UMdlEvi5w6TZkQIYSD6GZaUM5ete
