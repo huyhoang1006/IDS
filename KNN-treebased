@@ -1,0 +1,63 @@
+from sklearn import neighbors
+from sklearn.metrics import recall_score
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+import pandas as pd
+import collections
+from sklearn.metrics import confusion_matrix
+import pickle
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.feature_selection import SelectFromModel
+
+data = pd.read_csv(r'C:\Users\ADMIN\Desktop\New folder\train.csv')
+X_train = data.values
+Y_train = np.loadtxt(r"C:\Users\ADMIN\Desktop\New folder\label.txt")
+
+data = pd.read_csv(r'C:\Users\ADMIN\Desktop\New folder\test.csv')
+X_test = data.values
+Y_test = np.loadtxt(r"C:\Users\ADMIN\Desktop\New folder\label_test.txt")
+
+X_data = np.concatenate((X_train, X_test), axis=0)
+Y_data = [*Y_train, *Y_test]
+Y_data = np.array(Y_data)
+
+# clf = ExtraTreesClassifier(n_estimators=50)
+# clf = clf.fit(X_data, Y_data)
+# model = SelectFromModel(clf, prefit=True)
+# X_data = model.transform(X_data)
+
+# print(X_data.shape)
+x_train, x_test, y_train, y_test = train_test_split(X_data, Y_data, train_size=0.8)
+# scaler = MinMaxScaler()
+# scaler.fit(X_test)
+# x_test = scaler.transform(X_test)
+
+# clf = ExtraTreesClassifier(n_estimators=50)
+# clf = clf.fit(X_train, y_train)
+# model = SelectFromModel(clf, prefit=True)
+# X_train_new = model.transform(X_train)
+#
+# clf = clf.fit(X_test, y_test)
+# model = SelectFromModel(clf, prefit=True)
+# X_test_new = model.transform(X_test)
+# print(X_train_new.shape)
+# X_train, X_test, Y_train, Y_test = train_test_split(x_train, y_train, train_size=0.9)
+knn = neighbors.KNeighborsClassifier(n_neighbors=10, weights='distance').fit(x_train, y_train)
+Y_pred = knn.predict(x_test)
+#
+# print(collections.Counter(y_test))
+# print(collections.Counter(Y_pred))
+#
+# print(confusion_matrix(y_test, Y_pred))
+#
+a = accuracy_score(y_test, Y_pred)
+b = f1_score(y_test, Y_pred)
+c = recall_score(y_test, Y_pred)
+
+print(confusion_matrix(y_test, Y_pred))
+print(a)
+print(b)
+print(c)
