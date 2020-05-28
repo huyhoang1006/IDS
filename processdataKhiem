@@ -1,0 +1,41 @@
+import pandas as pd
+from scipy.io import arff
+import numpy as np
+
+data1 = arff.loadarff(r"F:\luu tru\data\NSL-KDD\KDDTrain+.arff")
+df = pd.DataFrame(data1[0])
+columns = list(df.columns)
+columns.append('level')
+
+data = pd.read_csv(r"F:\luu tru\data\NSL-KDD\KDDTrain+.txt", names=columns)
+
+label = ['normal', 'back', 'land', 'neptune', 'pod', 'smurf', 'teardrop']
+
+data_dos = object
+
+for name in label:
+    if type(data_dos) == type:
+        data_dos = data[data['class'] == name]
+    else:
+        data_dos = data_dos.append(data[data['class'] == name])
+
+label.remove('normal')
+
+# for name in label:
+#     data_dos = data_dos.replace(name, 'dos')
+
+print(data_dos['class'].value_counts())
+
+for name in columns:
+    if data_dos.dtypes[name] == object:
+        data_dos[name] = data_dos[name].astype('category')
+        data_dos[name] = data_dos[name].cat.codes
+
+del data_dos['level']
+y_dos = data_dos['class'].values
+
+# del data_dos['class']
+# data_dos.to_csv(r'C:\Users\ADMIN\Desktop\New folder (2)\data.csv')
+# np.savetxt(r'C:\Users\ADMIN\Desktop\New folder (2)\label.txt', y_dos, delimiter=',')
+
+print(data_dos['class'].value_counts())
