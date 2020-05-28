@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+from sklearn.neighbors import KNeighborsClassifier
+
+
+data = pd.read_csv(r"C:\Users\ADMIN\Desktop\New folder (2)\dataset_descriptor.csv")
+
+del data['Label1']
+del data['Label2']
+
+data['Label3'] = data['Label3'].astype('category')
+data['Label3'] = data['Label3'].cat.codes
+
+y_label = data['Label3'].values
+
+del data['Label3']
+
+X_train, X_test, Y_train, Y_test = train_test_split(data, y_label, train_size=0.8)
+cfl = KNeighborsClassifier(n_neighbors=5)
+cfl.fit(X_train, Y_train)
+
+y_pred = cfl.predict(X_test)
+print(accuracy_score(Y_test, y_pred))
+
+data_new = data.values
+pca = PCA(n_components='mle', svd_solver='auto')
+pca.fit(data_new)
+data_new = pca.transform(data_new)
+print(data_new.shape)
+X_train, X_test, Y_train, Y_test = train_test_split(data_new, y_label, train_size=0.8)
+cfl = KNeighborsClassifier(n_neighbors=5)
+cfl.fit(X_train, Y_train)
+Y_pred = cfl.predict(X_test)
+print(accuracy_score(Y_test, Y_pred))
+
