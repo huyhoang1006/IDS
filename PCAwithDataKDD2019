@@ -1,0 +1,36 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+
+data = pd.read_csv(r'C:\Users\ADMIN\Desktop\New folder (2)\data.csv')
+label = np.loadtxt(r'C:\Users\ADMIN\Desktop\New folder (2)\label.txt')
+
+data_N = data.values
+print(data.shape)
+
+data_N = (data_N-data_N.mean())/(data_N.max() - data_N.min())
+
+X_train, X_test, Y_train, Y_test = train_test_split(data_N, label, train_size=0.8)
+
+clf = RandomForestClassifier(n_estimators=1000)
+clf.fit(X_train, Y_train)
+Y_pred =clf.predict(X_test)
+a = accuracy_score(Y_test, Y_pred)
+print(a)
+
+pca = PCA(n_components='mle', svd_solver='auto')
+pca.fit(data_N)
+x_train = pca.transform(data_N)
+# x_test = pca.transform(X_test)
+print(x_train.shape)
+X_train, X_test, Y_train, Y_test = train_test_split(x_train, label, train_size=0.8)
+
+clf.fit(X_train, Y_train)
+y_pred = clf.predict(X_test)
+a = accuracy_score(Y_test, y_pred)
+print(a)
